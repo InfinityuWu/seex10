@@ -5,3 +5,9 @@ target
 .bsp
 .vscode
 .scalafmt.conf
+*.class
+*.iml
+*.ipr
+*.iws
+.idea
+out/
