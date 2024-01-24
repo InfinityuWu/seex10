@@ -22,9 +22,11 @@ object StringConcat extends Monoid[String]:
       case first :: rest => first + StringConcat.concat(rest)
 
 // Tupel-Merge Monoid
-case class TupleMerge[A, B](a: Monoid[A], b: Monoid[B]) extends Monoid[(A, B)]:
-  def empty: (A, B) = (a.empty, b.empty)
-  def combine(x: (A, B), y: (A, B)): (A, B) = (a.combine(x._1, y._1), b.combine(x._2, y._2))
+case class TupleMerge extends Monoid[(Int, String)]:
+
+  def merge(list: List[(Int, String)]): (Int, String) =
+    (IntSum.add(list.map((a,b) => a)), StringConcat.concat(list.map((a,b) => b)))
+
 
 // Liste-Merge Monoid
 case class ListMerge[A](merge: Monoid[A]) extends Monoid[List[A]]:
