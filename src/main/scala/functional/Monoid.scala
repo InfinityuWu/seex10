@@ -41,12 +41,15 @@ case class ListMerge[A](merge: Monoid[A]) extends Monoid[List[A]]:
     
 
 // Graph-Merge Monoid
-case class GraphMerge[A](merge: Monoid[A]) extends Monoid[Graph[A]]:
+case class GraphMerge[A](merge: Monoid[A]) extends Monoid[Graph[A]] {
   def empty: Graph[A] = Graph(merge.empty, Nil)
-  def combine(x: Graph[A], y: Graph[A]): Graph[A] =
-    (merge.combine(List(x.element, y.element), ListMerge[A](merge).combine(x.neighbors, y.neighbors)))
 
-  /*
+  def combine(x: Graph[A], y: Graph[A]): Graph[A] =
+    Graph(merge.combine(x.element, y.element), ListMerge[Graph[A]](GraphMerge(merge)).combine(x.neighbors, y.neighbors))
+}
+
+
+/*
 object IntSum // TODO
 
 object StringConcat // TODO
