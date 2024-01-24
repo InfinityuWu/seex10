@@ -9,23 +9,28 @@ trait Monoid[A]:
 
 // Int-Summe Monoid
 object IntSum extends Monoid[Int]:
-  def add(list:List[Int]): Int =
+  def empty: 0
+  def combine(list:List[Int]): Int =
     list match
-      case Nil => 0
-      case first :: rest => first + IntSum.add(rest)
+      case Nil => empty
+      case first :: rest => first + IntSum.combine(rest)
 
 // String-Konkatenation Monoid
 object StringConcat extends Monoid[String]:
-  def concat(list:List[String]): String =
+  def empty: ""
+  def combine(list:List[String]): String =
     list match
-      case Nil => ""
-      case first :: rest => first + StringConcat.concat(rest)
+      case Nil => empty
+      case first :: rest => first + StringConcat.combine(rest)
 
 // Tupel-Merge Monoid
-case class TupleMerge extends Monoid[(Int, String)]:
+case class TupleMerge [A, B](a: Monoid[A], b: Monoid[B])
+  def empty: (a.empty, b.empty)
+  def combine(list: List[String]): String =
+    list match
+      case Nil => empty
+      case first :: rest => (a.combine(first))
 
-  def merge(list: List[(Int, String)]): (Int, String) =
-    (IntSum.add(list.map((a,b) => a)), StringConcat.concat(list.map((a,b) => b)))
 
 
 // Liste-Merge Monoid
