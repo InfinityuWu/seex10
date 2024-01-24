@@ -2,10 +2,6 @@ package functional
 
 import functional.data.Graph
 
-trait Monoid[A]:
-  def empty: A
-  def combine(x: A, y: A): A
-
 // Monoid-Trait
 trait Monoid[A]:
   def empty: A
@@ -13,8 +9,10 @@ trait Monoid[A]:
 
 // Int-Summe Monoid
 object IntSum extends Monoid[Int]:
-  def empty: Int = 0
-  def combine(x: Int, y: Int): Int = x + y
+  def add(list:List[Int]): Int =
+    list match
+      case Nil => 0
+      case first :: rest => first + IntSum(rest)
 
 // String-Konkatenation Monoid
 object StringConcat extends Monoid[String]:
