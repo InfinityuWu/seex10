@@ -9,7 +9,7 @@ trait Monoid[A]:
 
 // Int-Summe Monoid
 object IntSum extends Monoid[Int]:
-  def empty: 0
+  def empty = 0
   def combine(list:List[Int]): Int =
     list match
       case Nil => empty
@@ -17,30 +17,32 @@ object IntSum extends Monoid[Int]:
 
 // String-Konkatenation Monoid
 object StringConcat extends Monoid[String]:
-  def empty: ""
+  def empty = ""
   def combine(list:List[String]): String =
     list match
       case Nil => empty
       case first :: rest => first + StringConcat.combine(rest)
 
 // Tupel-Merge Monoid
-case class TupleMerge [A, B](a: Monoid[A], b: Monoid[B])
-  def empty: (a.empty, b.empty)
-  def combine(list: List[String]): String =
-    list match
-      case Nil => empty
-      case first :: rest => (a.combine(first))
-
+case class TupleMerge [A, B](a: Monoid[A], b: Monoid[B]){
+  def empty: (A, B) = (a.empty, b.empty)
+    def combine(list: List[(A,B)]): (A, B) =
+      list match
+        case Nil => empty
+        case first :: rest => (a.combine(first._1, combine(rest)._1), b.combine(first._2, combine(rest)._2))
+}
 
 
 // Liste-Merge Monoid
 case class ListMerge[A](merge: Monoid[A]) extends Monoid[List[A]]:
   def empty: List[A] = List.empty
-  def combine(x: List[A], y: List[A]): List[A] = x ++ y
+  def combine(x: List[A], y: List[A]): List[A] = 
+    x.zipAll(y, merge.empty, merge.empty).collect{case (a,b) => merge.combine(a,b)}
+    
 
 // Graph-Merge Monoid
 case class GraphMerge[A](merge: Monoid[A]) extends Monoid[Graph[A]]:
-  def empty: Graph[A] = Graph.empty
+  def empty: Graph[A] = Graph
   def combine(x: Graph[A], y: Graph[A]): Graph[A] = x.merge(y)
 
   /*
