@@ -12,12 +12,14 @@ object IntSum extends Monoid[Int]:
   def add(list:List[Int]): Int =
     list match
       case Nil => 0
-      case first :: rest => first + IntSum(rest)
+      case first :: rest => first + IntSum.add(rest)
 
 // String-Konkatenation Monoid
 object StringConcat extends Monoid[String]:
-  def empty: String = ""
-  def combine(x: String, y: String): String = x + y
+  def concat(list:List[String]): String =
+    list match
+      case Nil => ""
+      case first :: rest => first + StringConcat.concat(rest)
 
 // Tupel-Merge Monoid
 case class TupleMerge[A, B](a: Monoid[A], b: Monoid[B]) extends Monoid[(A, B)]:
