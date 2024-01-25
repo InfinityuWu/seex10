@@ -1,6 +1,7 @@
 package functional
 
-import functional.data.Graph
+import functional.Foldable
+import functional.data.{Graph, Tree}
 import functional.data.Tree.{Empty, Node}
 
 @main def Main(): Unit =
@@ -20,3 +21,11 @@ import functional.data.Tree.{Empty, Node}
 
   val graph1 = Graph(1, Nil)
   val graph2 = Graph(1, List(Graph(2, Nil)))
+  
+  val optNames = List(Some("john"), None, Some("mary"), Some("bob"))
+
+  val tm:TupleMerge[Int, String] = TupleMerge(IntSum, StringConcat)
+  println(tm.combine(tuple1, tuple2))
+  println(TreeFoldable.foldMap(tree2)(_*2)(IntSum))
+  println(GraphFoldable.fold(graph2)(IntSum))
+  println(capitalizeNames(optNames))
